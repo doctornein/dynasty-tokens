@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AuthProvider } from "@/components/AuthProvider";
+import { ScoresTicker } from "@/components/scores/ScoresTicker";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased bg-[#0a0a0f] text-white`}>
         <AuthProvider>
           <div className="flex min-h-screen flex-col">
+            <ScoresTicker />
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />

@@ -9,6 +9,7 @@ import { RewardChip } from "@/components/rewards/RewardChip";
 import { Crown } from "lucide-react";
 
 const navLinks = [
+  { href: "/scores", label: "Scores" },
   { href: "/market", label: "Market" },
   { href: "/arena", label: "Arena" },
   { href: "/collection", label: "Locker Room" },
