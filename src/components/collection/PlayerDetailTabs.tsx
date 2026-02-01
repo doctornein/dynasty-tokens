@@ -6,25 +6,31 @@ import { GameLogTab } from "./tabs/GameLogTab";
 import { CareerStatsTab } from "./tabs/CareerStatsTab";
 import { ScheduleTab } from "./tabs/ScheduleTab";
 import { PlayerRewardsTab } from "./tabs/PlayerRewardsTab";
+import { CareerRewardsTab } from "./tabs/CareerRewardsTab";
+import { ArenaHistoryTab } from "./tabs/ArenaHistoryTab";
+import { CardHistoryTab } from "./tabs/CardHistoryTab";
 
 interface PlayerDetailTabsProps {
   player: Player;
+  owned?: boolean;
 }
 
-export function PlayerDetailTabs({ player }: PlayerDetailTabsProps) {
+export function PlayerDetailTabs({ player, owned }: PlayerDetailTabsProps) {
   return (
     <Tabs.Root defaultValue="game-log" className="flex h-full flex-col">
-      <Tabs.List className="flex shrink-0 border-b border-white/10">
+      <Tabs.List className="flex shrink-0 overflow-x-auto border-b border-white/10">
         {[
           { value: "game-log", label: "Game Log" },
           { value: "career", label: "Career" },
           { value: "schedule", label: "Schedule" },
-          { value: "rewards", label: "Performance Rewards" },
+          { value: "rewards", label: owned ? "My Rewards" : "Rewards" },
+          { value: "arena", label: "Arena" },
+          { value: "history", label: "History" },
         ].map((tab) => (
           <Tabs.Trigger
             key={tab.value}
             value={tab.value}
-            className="flex-1 px-3 py-2.5 text-xs font-semibold uppercase tracking-wider text-white/40 transition-colors hover:text-white/60 data-[state=active]:border-b-2 data-[state=active]:border-white/80 data-[state=active]:text-white"
+            className="shrink-0 px-3 py-2.5 text-xs font-semibold uppercase tracking-wider text-white/40 transition-colors hover:text-white/60 data-[state=active]:border-b-2 data-[state=active]:border-white/80 data-[state=active]:text-white"
           >
             {tab.label}
           </Tabs.Trigger>
@@ -42,7 +48,17 @@ export function PlayerDetailTabs({ player }: PlayerDetailTabsProps) {
           <ScheduleTab player={player} />
         </Tabs.Content>
         <Tabs.Content value="rewards" className="h-full">
-          <PlayerRewardsTab player={player} />
+          {owned ? (
+            <PlayerRewardsTab player={player} />
+          ) : (
+            <CareerRewardsTab player={player} />
+          )}
+        </Tabs.Content>
+        <Tabs.Content value="arena" className="h-full">
+          <ArenaHistoryTab player={player} />
+        </Tabs.Content>
+        <Tabs.Content value="history" className="h-full">
+          <CardHistoryTab player={player} />
         </Tabs.Content>
       </div>
     </Tabs.Root>

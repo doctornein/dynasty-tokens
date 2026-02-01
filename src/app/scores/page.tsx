@@ -4,7 +4,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import { BoxScore } from "@/components/scores/BoxScore";
+import { GameDetailModal } from "@/components/scores/GameDetailModal";
 
 interface Team {
   id: string;
@@ -57,12 +57,10 @@ function displayDate(date: Date) {
 
 function GameCard({
   game,
-  expanded,
-  onToggle,
+  onOpenBoxScore,
 }: {
   game: Game;
-  expanded: boolean;
-  onToggle: () => void;
+  onOpenBoxScore: () => void;
 }) {
   const away = game.teams.find((t) => t.homeAway === "away");
   const home = game.teams.find((t) => t.homeAway === "home");
@@ -72,10 +70,14 @@ function GameCard({
   const isFinal = game.state === "post";
   const isPre = game.state === "pre";
 
+  const handleClick = () => {
+    onOpenBoxScore();
+  };
+
   return (
     <div className="overflow-hidden rounded-xl border border-white/5 bg-white/[0.02]">
       <button
-        onClick={onToggle}
+        onClick={handleClick}
         className="w-full px-4 py-4 text-left transition-colors hover:bg-white/[0.03]"
       >
         {/* Status bar */}
@@ -92,11 +94,9 @@ function GameCard({
               {game.detail}
             </span>
           )}
-          {(isFinal || isLive) && (
-            <span className="text-[10px] text-white/30">
-              {expanded ? "Hide box score" : "Box score"}
-            </span>
-          )}
+          <span className="text-[10px] text-white/30">
+            {isPre ? "Preview" : "Box score"}
+          </span>
         </div>
 
         {/* Away team row */}
@@ -155,20 +155,13 @@ function GameCard({
           </div>
         )}
       </button>
-
-      {/* Expandable box score */}
-      {expanded && (isFinal || isLive) && (
-        <div className="border-t border-white/5">
-          <BoxScore gameId={game.id} />
-        </div>
-      )}
     </div>
   );
 }
 
 export default function ScoresPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [expandedGame, setExpandedGame] = useState<string | null>(null);
+  const [modalGame, setModalGame] = useState<Game | null>(null);
 
   const dateStr = formatDate(selectedDate);
   const { data, isLoading } = useSWR<{ events: Game[] }>(
@@ -184,7 +177,6 @@ export default function ScoresPage() {
     const next = new Date(selectedDate);
     next.setDate(next.getDate() + days);
     setSelectedDate(next);
-    setExpandedGame(null);
   };
 
   return (
@@ -214,7 +206,6 @@ export default function ScoresPage() {
               key={i}
               onClick={() => {
                 setSelectedDate(d);
-                setExpandedGame(null);
               }}
               className={`rounded-lg px-3 py-2 text-center transition-colors ${
                 isSelected
@@ -264,14 +255,20 @@ export default function ScoresPage() {
             <GameCard
               key={game.id}
               game={game}
-              expanded={expandedGame === game.id}
-              onToggle={() =>
-                setExpandedGame(expandedGame === game.id ? null : game.id)
-              }
+              onOpenBoxScore={() => setModalGame(game)}
             />
           ))}
         </div>
       )}
+
+      {/* Game detail modal */}
+      <GameDetailModal
+        game={modalGame}
+        open={!!modalGame}
+        onOpenChange={(open) => {
+          if (!open) setModalGame(null);
+        }}
+      />
     </div>
   );
 }

@@ -57,6 +57,7 @@ export async function fetchEspnGameLog(espnId: string): Promise<GameLogEntry[]> 
 
     const isHome = meta.atVs === "vs";
     entries.push({
+      eventId,
       date: meta.gameDate,
       opponent: meta.opponent.displayName,
       opponentAbbr: meta.opponent.abbreviation,

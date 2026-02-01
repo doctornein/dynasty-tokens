@@ -65,3 +65,12 @@ export function usePlayerBio(imageUrl: string | null) {
     { ...swrOptions, dedupingInterval: 300_000 } // 5 min dedup — bio rarely changes
   );
 }
+
+export function useFullGameLog(imageUrl: string | null) {
+  const espnId = extractEspnId(imageUrl);
+  return useSWR<GameLogEntry[]>(
+    espnId ? `/api/players/${espnId}/game-log?full=true` : null,
+    fetcher,
+    { ...swrOptions, dedupingInterval: 300_000 }
+  );
+}

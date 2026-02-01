@@ -44,6 +44,7 @@ export interface Player {
 }
 
 export interface GameLogEntry {
+  eventId: string;
   date: string;
   opponent: string;
   opponentAbbr: string;
@@ -198,7 +199,9 @@ export type TransactionType =
   | "auction_buy"
   | "arena_wager"
   | "arena_win"
-  | "arena_refund";
+  | "arena_refund"
+  | "trade_send"
+  | "trade_receive";
 
 export type AuctionStatus = "active" | "settled" | "cancelled";
 
@@ -288,4 +291,36 @@ export interface ArenaMatch {
   createdAt: string;
   acceptedAt: string | null;
   settledAt: string | null;
+}
+
+// Trade types
+export type TradeStatus = "pending" | "accepted" | "declined" | "cancelled";
+
+export interface Trade {
+  id: string;
+  senderId: string;
+  senderUsername: string;
+  receiverId: string | null;
+  receiverUsername: string | null;
+  senderCards: string[];
+  receiverCards: string[];
+  senderDt: number;
+  receiverDt: number;
+  message: string | null;
+  status: TradeStatus;
+  createdAt: string;
+  respondedAt: string | null;
+  fulfilledBy: string | null;
+  isOpen: boolean;
+}
+
+export interface TradeWishlistEntry {
+  id: string;
+  userId: string;
+  playerId: string;
+  maxCardsGive: number | null;
+  maxDtGive: number;
+  minDtReceive: number;
+  enabled: boolean;
+  createdAt: string;
 }

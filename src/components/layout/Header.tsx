@@ -10,8 +10,10 @@ import { Crown } from "lucide-react";
 
 const navLinks = [
   { href: "/scores", label: "Scores" },
+  { href: "/stats", label: "Stats" },
   { href: "/market", label: "Market" },
   { href: "/arena", label: "Arena" },
+  { href: "/trades", label: "Trades" },
   { href: "/collection", label: "Locker Room" },
   { href: "/rewards", label: "Rewards" },
   { href: "/leaderboard", label: "Leaderboard" },
